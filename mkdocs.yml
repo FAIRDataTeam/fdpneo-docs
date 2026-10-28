@@ -1,0 +1,99 @@
+site_name: FDPneo
+site_description: Documentation for FDPneo, a FAIR Data Point implementation with OIDC identity, ODRL access control, anonymous metrics and agent access.
+site_url: https://fdpneo.readthedocs.io/
+repo_url: https://github.com/FAIRDataTeam/fdpneo-server
+repo_name: FAIRDataTeam/fdpneo-server
+edit_uri: ""
+copyright: FDPneo is released under the MIT License.
+
+theme:
+  name: material
+  language: en
+  logo: assets/fdp.svg
+  favicon: assets/fdp.svg
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      accent: deep orange
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      accent: deep orange
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+
+plugins:
+  - search
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/FAIRDataTeam
+    # Add the FAIREnough channel once its URL is confirmed:
+    # - icon: fontawesome/brands/youtube
+    #   link: https://www.youtube.com/...
+    #   name: FAIREnough on YouTube
+
+nav:
+  - Home: index.md
+  - About:
+      - About FDPneo: about/index.md
+      - Users and roles: about/users-and-roles.md
+      - Components: about/components.md
+      - Architecture: about/architecture.md
+  - Deployment:
+      - Local deployment: deployment/local.md
+      - Production deployment: deployment/production.md
+      - Development setup: deployment/development.md
+      - Configuration: deployment/configuration.md
+      - User management: deployment/user-management.md
+      - Operations: deployment/operations.md
+  - Usage:
+      - Signing in and roles: usage/signing-in.md
+      - Browsing, search and SPARQL: usage/browsing-and-search.md
+      - Publishing metadata: usage/publishing-metadata.md
+      - Schemas and resource types: usage/schemas.md
+      - Access policies (ODRL): usage/policies.md
+      - Licenses: usage/licenses.md
+      - Users: usage/users.md
+      - Settings, metrics and maintenance: usage/settings-and-metrics.md
+      - Troubleshooting: usage/troubleshooting.md
+  - API:
+      - API usage: api/index.md
+  - Agents:
+      - MCP bridge (fdp-mcp): agents/mcp.md
+  - Videos: videos.md
+  - Development:
+      - Contributing: development/contributing.md
+      - Architecture decisions: development/adrs.md
+      - Changelog: development/changelog.md
