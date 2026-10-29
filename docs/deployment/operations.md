@@ -65,7 +65,7 @@ After a restore or import, rebuild the search index with `fdp search reindex`. T
 
 ## Upgrades
 
-1. Read the [changelog](../development/changelog.md) for the versions you are crossing; some releases include one-off migration commands.
+1. Read the [changelog](../development/changelog.md) for the versions you are crossing; some releases include one-off migration commands. The client's update notice and the **Instance settings, Updates** panel say which releases need manual steps.
 2. Back up both stores.
 3. Pull the new images and restart (`docker compose pull && docker compose up -d`). The server entrypoint runs `fdp db migrate` on start.
 4. Check `GET /fdp-api/info` for the running version and `GET /fdp-api/readyz` for readiness.
@@ -86,7 +86,7 @@ Server 0.19 moves the bundled stacks to PostgreSQL 18 and Keycloak 26. Both need
 
 Both scripts are idempotent.
 
-Pin `IMAGE_TAG` to a release tag rather than `main` for reproducible deployments.
+Pin `SERVER_IMAGE_TAG` and `CLIENT_IMAGE_TAG` to release tags rather than `main` for reproducible deployments.
 
 ## Health endpoints
 

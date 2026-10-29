@@ -34,7 +34,8 @@ Every `CHANGE-ME` is required; the stack refuses to start without them. A conven
 |---|---|
 | `PUBLIC_HOST` | The public DNS name, without scheme or port. Caddy obtains the certificate for it. |
 | `ACME_EMAIL` | Contact for certificate issuance and expiry notices. |
-| `IMAGE_TAG` | Image tag to pull. Pin a release tag for reproducible deployments. |
+| `IMAGE_TAG` | Image tag to pull, `latest` by default. Releases publish `X.Y.Z`, `X.Y` and `latest`; `main` follows unreleased development. |
+| `SERVER_IMAGE_TAG`, `CLIENT_IMAGE_TAG` | Pin the server and the client to their own releases, for example `0.20.0` and `0.9.0`. Each falls back to `IMAGE_TAG`. |
 | `EXPOSE_API_DOCS` | Serve Swagger and ReDoc (`false` by default; the OpenAPI spec is always served). |
 | `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` | The server's operational database. |
 | `KC_DB_PASSWORD` | Keycloak's own database role, created on first boot. |
@@ -99,7 +100,7 @@ Forwarded headers matter. Keycloak (`KC_PROXY_HEADERS=xforwarded`) and the serve
 
 ## Operations
 
-**Updates.** `docker compose pull && docker compose up -d`. Pin `IMAGE_TAG` to a release tag for reproducible deployments.
+**Updates.** Administrators are told about new releases in the client (see [Configuration](configuration.md#update-notifications)). To update, set `SERVER_IMAGE_TAG` and `CLIENT_IMAGE_TAG` to the new releases, then run `docker compose pull && docker compose up -d`. A pinned tag also makes a rollback a one-line change. Read the release's upgrade notes first when it is marked as needing manual steps.
 
 **Metrics roll-ups** run in-process (`FDP_METRICS_ROLLUP_IN_PROCESS=true`): raw request rows are aggregated to hourly and daily rows and pruned on a fixed interval, which is also the privacy boundary of ADR-0002, since raw rows carry the pseudonymous visitor hash. If you run more than one server replica, unset it and schedule `docker compose exec server fdp metrics rollup` (every five minutes or so) instead, so replicas do not race.
 

@@ -51,7 +51,7 @@ The evaluation stack's `.env` sets the public host and ports, the image tag, the
 | `SERVER_PORT` | `8000` | Published API port. |
 | `KEYCLOAK_PORT` | `8081` | Published Keycloak port. |
 | `MCP_PORT` | `8002` | Published port of the optional MCP bridge. |
-| `IMAGE_TAG` | `main` | Image tag pulled from GHCR. Pin a release tag for reproducible deployments. |
+| `IMAGE_TAG` | `main` | Image tag pulled from GHCR. Releases publish `X.Y.Z`, `X.Y` and `latest`. `SERVER_IMAGE_TAG` and `CLIENT_IMAGE_TAG` override it per component. |
 | `ENVIRONMENT` | `production` | Server runtime mode (`production` or `development`). |
 | `EXPOSE_API_DOCS` | `true` | Serve Swagger and ReDoc even in production mode. The OpenAPI spec is always served. |
 | `POSTGRES_*`, `KEYCLOAK_ADMIN*`, `FDP_IDP_ADMIN_*` | dev values | Credentials; rotate for anything beyond evaluation. |
