@@ -110,6 +110,19 @@ Forwarded headers matter. Keycloak (`KC_PROXY_HEADERS=xforwarded`) and the serve
 
 **No public DNS yet?** Add `tls internal` inside the site block of the `Caddyfile` to smoke-test with a self-signed certificate. Browsers will warn and the server's issuer fetch will fail certificate verification, so login stays broken until real TLS is in place; this mode only checks routing.
 
+## Verifying images
+
+Release images from server 0.21.1 and client 0.9.2 onwards are signed with Sigstore keyless signing. The signature proves that an image was built by FDPneo's own release workflow for that exact tag. Each image also carries a build-provenance attestation, recording how and from which commit it was built. To check an image before deploying it:
+
+```bash
+cosign verify ghcr.io/fairdatateam/fdpneo-server:0.21.1 \
+  --certificate-identity https://github.com/FAIRDataTeam/fdpneo-server/.github/workflows/release.yml@refs/tags/v0.21.1 \
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com
+gh attestation verify oci://ghcr.io/fairdatateam/fdpneo-server:0.21.1 --repo FAIRDataTeam/fdpneo-server
+```
+
+For the client, use `fdpneo-client`, its version and its repository. The optional host updater runs the same signature check before it applies a release. The `main` development images are not signed.
+
 ## Hardening checklist
 
 Most items of the [deployment-hardening checklist](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/security/deployment-hardening.md) (TLS, security headers, secret rotation, internal-only backing stores) are already satisfied by the shape of this stack. The remaining ones are operational: offsite backups, monitoring, and multi-factor authentication in the identity provider. In summary:

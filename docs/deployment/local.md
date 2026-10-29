@@ -80,7 +80,7 @@ docker compose -f deploy/stack/compose.yaml --env-file deploy/stack/.env up -d -
 The server build context is the server repository root; the client context is the sibling `../client`.
 
 !!! note "Apple Silicon and other arm64 hosts"
-    At the time of writing (October 2026) the `main` tags of the server and client images on GHCR are published for `linux/amd64` only, so a plain pull fails on an arm64 host with "no matching manifest". Build from source instead, as above.
+    Release images from server 0.21.1 and client 0.9.2 onwards are published for both `linux/amd64` and `linux/arm64`. Pin them with `SERVER_IMAGE_TAG` and `CLIENT_IMAGE_TAG`, or use `IMAGE_TAG=latest`. The `main` development images and older releases are `linux/amd64` only, so on an arm64 host a pull of those fails with "no matching manifest". Build them from source instead, as above.
 
 !!! note "GeoIP database month when building the server"
     The server image downloads the DB-IP city database at build time, and the month pinned in the `Dockerfile` ages out after a while (the download then fails with a 404). Pass the current month explicitly, for example `docker build --build-arg DBIP_CITY_VERSION=2026-10 -t ghcr.io/fairdatateam/fdpneo-server:main .` from the server repository, then start the stack without `--build`. The CI workflow and `scripts/fetch-geoip.sh` resolve the newest month automatically.
