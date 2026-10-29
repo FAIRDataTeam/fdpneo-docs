@@ -6,13 +6,15 @@ Open **avatar, Settings** as an administrator.
 
 ![The settings page](../assets/screenshots/13-settings.webp)
 
-Settings are per-key configuration values the server exposes: branding texts, search-filter configuration, form autocomplete sources, and others. Each is edited as JSON and validated server-side before it is stored.
+Settings are per-key configuration values the server exposes: branding texts, search-filter configuration, form autocomplete sources, the access-control mode, and others. Keys with a structured form can also be edited as JSON, and every value is validated server-side before it is stored.
+
+**Access control** chooses between *Open access*, the default, where everyone can read every published record and only the writer roles may create, edit or delete, and *ODRL policies*, where each record's access policy decides. The writer roles are edited here too. *Reset to default* returns to the value set by `FDP_ACCESS_CONTROL_MODE`. See [Access policies](policies.md#access-control-mode).
 
 Look and feel (colours, logo, favicon, organisation name) is configured on the client container instead, authored with the **Appearance** editor at `/appearance`; see [Configuration](../deployment/configuration.md).
 
 ## Metrics dashboard
 
-Open **avatar, Metrics**. Stewards see metrics for the resources they own; administrators see the whole instance.
+Open the **Metrics** tab in the header. Stewards see metrics for the resources they own; administrators see the whole instance.
 
 ![The metrics dashboard](../assets/screenshots/14-metrics.webp)
 

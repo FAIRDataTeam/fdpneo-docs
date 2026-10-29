@@ -79,6 +79,12 @@ docker compose -f deploy/stack/compose.yaml --env-file deploy/stack/.env up -d -
 
 The server build context is the server repository root; the client context is the sibling `../client`.
 
+!!! note "Apple Silicon and other arm64 hosts"
+    At the time of writing (October 2026) the `main` tags of the server and client images on GHCR are published for `linux/amd64` only, so a plain pull fails on an arm64 host with "no matching manifest". Build from source instead, as above.
+
+!!! note "GeoIP database month when building the server"
+    The server image downloads the DB-IP city database at build time, and the month pinned in the `Dockerfile` ages out after a while (the download then fails with a 404). Pass the current month explicitly, for example `docker build --build-arg DBIP_CITY_VERSION=2026-10 -t ghcr.io/fairdatateam/fdpneo-server:main .` from the server repository, then start the stack without `--build`. The CI workflow and `scripts/fetch-geoip.sh` resolve the newest month automatically.
+
 ## Running on another host on your network
 
 Set `PUBLIC_HOST` to a name or IP that resolves the same from the browser and from inside the containers (a LAN IP or DNS name), and adjust the ports if they clash. Login still only works over plain HTTP at the exact origin `http://<PUBLIC_HOST>:5173`, because the bundled realm restricts redirect URIs. For HTTPS or any public exposure, do not adapt this stack; use the [single-domain production stack](production.md).
@@ -97,6 +103,8 @@ Set `PUBLIC_HOST` to a name or IP that resolves the same from the browser and fr
 The browser talks to the client for the UI, to the server for the API (CORS-allowed) and to Keycloak for login. The server reaches GraphDB, PostgreSQL and Keycloak over the internal network and resolves `PUBLIC_HOST` to the Docker host, so the OIDC issuer URL is identical for the browser and the server.
 
 Bootstrapping is automatic and idempotent: `graphdb-init` creates the `fdp` repository from `deploy/graphdb/fdp-repo-config.ttl` if it is missing, the server entrypoint runs `fdp db migrate`, and the application auto-applies the bundled default profile (`FDP_PROFILE_AUTO_APPLY=true`) and runs a named-graph isolation self-test.
+
+Access control starts in **open** mode: every published record is publicly readable and `admin` and `steward` may write, with no ODRL evaluation. Set `FDP_ACCESS_CONTROL_MODE=odrl` in `.env`, or switch *Access control* under avatar, Settings as an administrator, to enforce per-record [access policies](../usage/policies.md).
 
 ## Stop, update, reset
 

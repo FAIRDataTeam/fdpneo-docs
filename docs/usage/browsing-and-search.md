@@ -1,6 +1,6 @@
 # Browsing, search and SPARQL
 
-Everyone, signed in or not, can explore the metadata in three ways: by browsing the catalog hierarchy, by searching, and by querying with SPARQL. Anonymous users see only published records; signed-in users additionally see what their policies allow.
+Everyone, signed in or not, can explore the metadata in three ways: by browsing the catalog hierarchy, by searching, and by querying with SPARQL. Anonymous users see only published records; signed-in users additionally see the drafts they may curate and, when the deployment runs in ODRL mode, whatever their policies allow.
 
 ## Browsing
 
@@ -12,7 +12,7 @@ Every record is Linked Data. Its URL is its identifier, and the detail page offe
 
 ## Search
 
-The search box in the top bar, and the Search page, take a free-text query and offer **facets** (resource type, license and others) built from the live index. Results respect policy and publication state, so anonymous users only find published records.
+The search box in the top bar, and the Search page, take a free-text query and offer **facets** (resource type, license and others) built from the live index. Results respect publication state and, in ODRL mode, access policies, so anonymous users only find published records.
 
 ![The search page with facets](../assets/screenshots/04-search.webp)
 
@@ -33,13 +33,15 @@ A few things to know about the endpoint:
 - `SERVICE` clauses are rejected; FDPneo does not federate queries.
 - Updates require authentication and are checked per target graph; anonymous users can only read.
 
-A starting query that lists published datasets with their titles:
+Because every record lives in its own named graph, the default graph is empty: match triples inside a `GRAPH` pattern. A starting query that lists datasets with their titles:
 
 ```sparql
 PREFIX dcat: <http://www.w3.org/ns/dcat#>
 PREFIX dct:  <http://purl.org/dc/terms/>
 SELECT ?dataset ?title WHERE {
-  ?dataset a dcat:Dataset ;
-           dct:title ?title .
+  GRAPH ?g {
+    ?dataset a dcat:Dataset ;
+             dct:title ?title .
+  }
 } LIMIT 50
 ```

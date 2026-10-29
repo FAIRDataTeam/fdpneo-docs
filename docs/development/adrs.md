@@ -32,6 +32,7 @@ The rationale for the major architectural choices is recorded as Architecture De
 | [0024](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/adr/0024-mcp-opt-in-write-tools.md) | Opt-in write tools in the MCP sidecar (`fdp-mcp`) | Accepted |
 | [0025](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/adr/0025-runtime-index-targets.md) | Runtime-managed FDP Index ping targets | Accepted |
 | [0026](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/adr/0026-fdp-o-namespace-correction.md) | Correct the FDP Ontology namespace and migrate stored vocabulary | Accepted |
+| [0027](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/adr/0027-open-access-default-odrl-opt-in.md) | Open access by default, ODRL evaluation opt-in | Accepted |
 
 The [ADR index](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/adr/README.md) in the repository is authoritative.
 

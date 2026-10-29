@@ -1,6 +1,6 @@
 # Explainer videos
 
-A series of short videos on the FAIREnough YouTube channel walks through FDPneo, from what it is to running it in production. Each video is three to seven minutes long, has closed captions, and matches a section of this documentation.
+A series of short videos on the [FAIR Enough](https://www.youtube.com/channel/UCMYMOF2sZTVQq5P_41LYc7A) YouTube channel walks through FDPneo, from what it is to running it in production. Each video is three to seven minutes long, has closed captions in English and Brazilian Portuguese, and matches a section of this documentation.
 
 | # | Video | Documentation |
 |---|---|---|
@@ -14,4 +14,4 @@ A series of short videos on the FAIREnough YouTube channel walks through FDPneo,
 | 8 | Agent access through MCP | [MCP bridge](agents/mcp.md) |
 | 9 | Production deployment with TLS | [Production deployment](deployment/production.md) |
 
-Links to the individual videos will be added here as they are published.
+All videos are collected in the playlist [FDPneo, an AI-developed FAIR Data Point](https://www.youtube.com/playlist?list=PLD9zjao_DDZc). Links to the individual videos will be added here as they are published.

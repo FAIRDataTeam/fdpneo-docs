@@ -9,13 +9,13 @@ Describing a type and exposing it are kept separate on purpose: publishing a sha
 
 ## Schemas
 
-Open **avatar, Schemas**.
+Open the **Schemas** tab in the header (administrators only).
 
 ![The schemas page](../assets/screenshots/08-schemas.webp)
 
-- **List, author and publish** shapes as Turtle in the text-first editor. Shapes are versioned (`v1`, `v2`, …) at a stable IRI, so records keep pointing at the version they were validated against.
+- **List, author and publish** shapes. Each shape has a slug that becomes its stable IRI under `/fdp-api/schemas/`, and saving an existing shape creates a new version, so records keep pointing at the version they were validated against. The shapes of the bundled profile are marked as protected.
 - **Validate** a sample record against a saved shape before relying on it.
-- The **visual SHACL editor** lets you author shapes graphically. Shapes are nodes on a canvas; properties and constraints sit on the nodes; relationships between shapes are edges. A live Turtle preview shows exactly what will be stored, and shapes round-trip between the visual and the text editor. The editor is functionally inspired by [ProjectOak](https://github.com/luizbonino/ProjectOak).
+- The **Visual Editor** lets you author a shape as the form it will produce. A palette of widgets (text field, text area, rich text, URI, autocomplete, and more) is dragged or clicked onto a form canvas organised in groups; the inspector on the right holds the schema settings (name, description, shape IRI, target class) and, per field, the property path, datatype, cardinality and other constraints. Nested shapes can be added for structured values. The **SHACL Code** tab shows and edits the same shape as Turtle, the **Form Preview** tab shows the form a steward will fill in, and the **Graph** button opens a graph view of the shape. The three views round-trip. The editor is functionally inspired by [ProjectOak](https://github.com/luizbonino/ProjectOak).
 
 The bundled default profile provides the standard FDP/DCAT shapes (Repository, Catalog, Dataset, DataService, Distribution). A community profile can replace or extend them with, for example, biobank, sample, patient-registry or publication types while keeping DCAT compatibility.
 

@@ -36,11 +36,26 @@ Anonymous requests see published records only. With a bearer token you also see 
 
 ## Writing records
 
-Records are created with LDP `POST` of RDF (Turtle by default) to the parent container, or `PUT` to a chosen IRI:
+Records are created with LDP `POST` of RDF (Turtle by default) to the type's collection, naming the parent with `dct:isPartOf` in the body (a `Slug` header suggests the identifier suffix), or with `PUT` to a chosen IRI:
 
 ```bash
-curl -X POST -H "Authorization: Bearer $KEY" -H "Content-Type: text/turtle" \
-  --data-binary @dataset.ttl http://localhost:8000/catalog/<id>
+curl -i -X POST -H "Authorization: Bearer $KEY" -H "Content-Type: text/turtle" \
+  -H "Slug: my-dataset" --data-binary @dataset.ttl http://localhost:8000/dataset
+# HTTP/1.1 201 Created
+# etag: "c8787f62…"
+# location: http://localhost:8000/dataset/my-dataset
+# fdp-metadata-state: DRAFT
+```
+
+where `dataset.ttl` uses `<>` as the subject and links the parent:
+
+```turtle
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dct:  <http://purl.org/dc/terms/> .
+<> a dcat:Dataset ;
+    dct:title "Noise levels around Enschede Airport, 2025" ;
+    dct:publisher <https://example.org/org/twente-monitoring-network> ;
+    dct:isPartOf <http://localhost:8000/catalog/environmental-monitoring> .
 ```
 
 The body is validated against the type's SHACL shape; violations come back as a structured error. The server fills in the record's meta-metadata (creator, timestamps, version) itself.
@@ -50,6 +65,7 @@ The body is validated against the type's SHACL shape; violations come back as a 
 ```bash
 curl -X POST -H "Authorization: Bearer $KEY" -H "Content-Type: application/json" \
   -d '{"to":"PUBLISHED"}' http://localhost:8000/fdp-api/dataset/<id>/state
+# {"record":"http://localhost:8000/dataset/<id>","from_state":"DRAFT","to_state":"PUBLISHED"}
 ```
 
 or create it visible in one step with `Prefer: publication-state=PUBLISHED` on the creating request. States are `DRAFT`, `PUBLISHED` and `ARCHIVED`.
@@ -64,15 +80,15 @@ curl -X PATCH -H "Authorization: Bearer $KEY" -H "If-Match: \"<etag>\"" \
   http://localhost:8000/dataset/<id>
 ```
 
-Whether a write is allowed is decided by the record's ODRL policy; a denied request returns `403`.
+Whether a write is allowed depends on the access-control mode. In open mode, the default, the caller needs one of the writer roles (`admin` or `steward` unless configured otherwise); in ODRL mode the record's policy decides. A denied request returns `403`. The mode itself is the setting `access.control` (`GET` or, as an administrator, `PUT /fdp-api/settings/access.control`).
 
 ## SPARQL
 
-`GET` or `POST` `/fdp-api/sparql` implements the SPARQL 1.1 Protocol. Queries are rewritten to the named graphs the caller may read, `SERVICE` clauses are rejected, and updates require authentication. Anonymous callers see exactly the published metadata.
+`GET` or `POST` `/fdp-api/sparql` implements the SPARQL 1.1 Protocol. Queries are rewritten to the named graphs the caller may read, `SERVICE` clauses are rejected, and updates require authentication. Anonymous callers see exactly the published metadata. Every record lives in its own named graph and the default graph is empty, so match inside `GRAPH ?g { … }`.
 
 ```bash
 curl -H 'Accept: application/sparql-results+json' \
-  --data-urlencode 'query=SELECT ?s WHERE { ?s a <http://www.w3.org/ns/dcat#Dataset> } LIMIT 10' \
+  --data-urlencode 'query=SELECT ?s WHERE { GRAPH ?g { ?s a <http://www.w3.org/ns/dcat#Dataset> } } LIMIT 10' \
   http://localhost:8000/fdp-api/sparql
 ```
 

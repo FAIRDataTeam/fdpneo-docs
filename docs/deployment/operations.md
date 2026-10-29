@@ -70,6 +70,8 @@ After a restore or import, rebuild the search index with `fdp search reindex`. T
 3. Pull the new images and restart (`docker compose pull && docker compose up -d`). The server entrypoint runs `fdp db migrate` on start.
 4. Check `GET /fdp-api/info` for the running version and `GET /fdp-api/readyz` for readiness.
 
+A deployment that relies on ODRL policies and upgrades past 0.17.0 must set `FDP_ACCESS_CONTROL_MODE=odrl` (or switch *Access control* in the settings), because open access became the default. See [Access policies](../usage/policies.md#access-control-mode).
+
 Pin `IMAGE_TAG` to a release tag rather than `main` for reproducible deployments.
 
 ## Health endpoints

@@ -20,7 +20,7 @@ In the evaluation stack, sign in as `admin` / `admin` (administrator and steward
 | **Steward** | All of the above, plus create, edit and delete their own records, manage publication state, and use the "My data" dashboard. |
 | **Admin** | Everything, plus manage SHACL schemas, resource types, ODRL policies, licenses, instance settings, users, and factory reset. |
 
-What you may do with a specific record is decided by the ODRL policy it references; see [Access policies](policies.md).
+In the default open mode these roles are all that matters. When the deployment runs in ODRL mode, what you may do with a specific record is decided by the ODRL policy it references; see [Access policies](policies.md).
 
 ## Your profile
 
@@ -30,6 +30,6 @@ Your identity, roles and a **Manage account** link to the identity provider are 
 
 ## Account menu
 
-The avatar menu is where signed-in users find their pages. Stewards see **Dashboard** (My data) and **Access tokens**; administrators also see **Schemas**, **Resource types**, **Policies**, **Licenses**, **Users** (when the user-management façade is enabled), **Settings** and **Metrics**. The **About** page shows the server version, the applied profile and the enabled features.
+Signed-in users find their pages in two places. The header tabs show **Browse** and **Search** to everyone, and **Schemas**, **Policies** and **Metrics** to administrators. The avatar menu holds **My metadata** (stewards), **Licenses**, **Resource types**, **Settings**, **Backup & Restore**, **Appearance** and **Users** (administrators, the last one only when the user-management façade is enabled), and **Profile** and **Access tokens** for everyone. The **About** page in the footer shows the server version, the applied profile and the enabled features.
 
 ![The about page](../assets/screenshots/17-about.webp)

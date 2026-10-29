@@ -36,6 +36,8 @@ The client uses the OIDC Authorization Code flow with PKCE directly against the 
 
 ## ODRL policy model
 
+Every authorization decision goes through the policy module, which has two engines (ADR-0027). In the default **open** mode it answers without any policy: read is permitted to everyone, and modify, delete and distribute to the configured writer roles. In **odrl** mode it runs the full model described in this section. The mode is the runtime setting `access.control`, seeded from `FDP_ACCESS_CONTROL_MODE`, and the enforcement points are unaware of it.
+
 ![Offer and Agreement](../assets/diagrams/06_odrl_offer_agreement.svg)
 
 Access conditions are expressed in a documented subset of W3C ODRL. The profile supports `odrl:Offer` and `odrl:Agreement`, rules of type `odrl:Permission` and `odrl:Prohibition` (no Duties), the actions `read`, `modify`, `delete` and `distribute`, and constraints on party identity, role membership, group membership and time windows. Purpose, spatial, payment and count constraints are deliberately excluded.
@@ -76,7 +78,7 @@ A deployment profile is a bundle with a manifest (`profile.yaml`), SHACL schemas
 
 ## Client application
 
-The client is a Vue 3 application in strict TypeScript, built with Vite, using Pinia for state, TanStack Query for server cache, PrimeVue components, Vue Flow for the visual SHACL editor canvas, and request/response types generated from the server's OpenAPI specification. It is stateless across reloads; all persistent state lives on the server.
+The client is a Vue 3 application in strict TypeScript, built with Vite, using Pinia for state, TanStack Query for server cache, PrimeVue components, Monaco for the code editors, and request/response types generated from the server's OpenAPI specification. It is stateless across reloads; all persistent state lives on the server.
 
 ## Further reading
 

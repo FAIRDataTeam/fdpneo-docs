@@ -6,12 +6,12 @@ FDPneo consists of three independently released components:
 
 | Component | Repository | What it is |
 |---|---|---|
-| **Server** | [`fdpneo-server`](https://github.com/FAIRDataTeam/fdpneo-server) | Python / FastAPI metadata server with a full W3C Linked Data Platform API, an access-controlled SPARQL endpoint, ODRL policy enforcement and anonymous usage metrics. |
+| **Server** | [`fdpneo-server`](https://github.com/FAIRDataTeam/fdpneo-server) | Python / FastAPI metadata server with a full W3C Linked Data Platform API, an access-controlled SPARQL endpoint, optional ODRL policy enforcement and anonymous usage metrics. |
 | **Client** | [`fdpneo-client`](https://github.com/FAIRDataTeam/fdpneo-client) | Vue 3 single-page web application for browsing, searching and publishing metadata, with visual SHACL and ODRL editors and a metrics dashboard. |
 | **MCP bridge** | [`mcp`](https://github.com/FAIRDataTeam/mcp) (`fdp-mcp`) | Model Context Protocol server that lets AI agents consume any spec-compliant FAIR Data Point. |
 
 !!! warning "Status"
-    FDPneo is **not** the FAIR Data Point reference implementation. It is an experimental, AI-developed implementation, under active development; the bundled evaluation deployment is dev-credentialed and not hardened for production. The reference implementation is [FAIRDataTeam/FAIRDataPoint](https://github.com/FAIRDataTeam/FAIRDataPoint), documented at [docs.fairdatapoint.org](https://docs.fairdatapoint.org).
+    FDPneo is **not** the FAIR Data Point reference implementation. It is another, AI-developed implementation of the FDP specifications, under active development; the bundled evaluation deployment is dev-credentialed and not hardened for production. The reference implementation is [FAIRDataTeam/FAIRDataPoint](https://github.com/FAIRDataTeam/FAIRDataPoint), documented at [docs.fairdatapoint.org](https://docs.fairdatapoint.org).
 
 ## Where to start
 

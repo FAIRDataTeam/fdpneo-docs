@@ -20,11 +20,23 @@ Copy `.env.example` from the server repository and adjust. Settings are grouped 
 | `FDP_SCHEMA_SYNC_` | Schema synchronisation | refresh of remote-sourced schemas |
 | `FDP_DATA_` | Simple data provider | `DOWNLOAD_MODE` (`redirect` or `stream`), proxy timeout and size limit |
 | `FDP_PROFILE_` | Deployment profile | `AUTO_APPLY`, `PATH` |
+| `FDP_ACCESS_CONTROL_` | Access control | `MODE` (`open`, the default, or `odrl`) |
 | `FDP_INDEX_PING_` | FDP Index announcement | `TARGETS`, `INTERVAL_SECONDS` |
 | `FDP_REMOTE_LABELS_` | External label resolution | `ENABLED`, `ALLOWED_HOSTS` |
 | `FDP_RATELIMIT_` | Rate limiting behind a proxy | `TRUST_FORWARDED_FOR` |
 
 After editing the configuration, restart the server. After upgrading, also run `fdp db migrate` (the container entrypoint does this automatically).
+
+### Access control
+
+`FDP_ACCESS_CONTROL_MODE` sets how read and write access is decided (ADR-0027).
+
+| Value | Behaviour |
+|---|---|
+| `open` (default) | Every published record is publicly readable; `admin` and `steward` may create, edit and delete. No ODRL evaluation. |
+| `odrl` | Each record's ODRL policy, inherited from its parent or the system default, decides who may read or write it. |
+
+The variable only seeds the default of the runtime setting `access.control`. An administrator can switch modes and change the writer roles at any time under **avatar, Settings, Access control**, and that choice wins until it is reset. Both bundled compose files pass `FDP_ACCESS_CONTROL_MODE` through with `open` as the default. See [Access policies](../usage/policies.md#access-control-mode).
 
 ### Triple store
 

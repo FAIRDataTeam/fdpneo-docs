@@ -9,7 +9,7 @@ Stewards and administrators create and maintain records. FDP metadata follows DC
 1. Click **Create** in the top bar to make a top-level Catalog, or open an existing record and use its **new child** link (for example a Dataset under a Catalog).
 2. Fill in the form. The fields come from the deployment's SHACL schema for that type (title, description, publisher, keywords, and so on). Required fields are marked, and the form validates against the schema before saving.
 3. Two pickers reference managed documents:
-    - **Access policy** (`dct:rights`): choose a published ODRL policy that governs who may read, modify or delete the record. See [Access policies](policies.md). A record without one inherits the policy of its parent.
+    - **Access policy** (`dct:rights`): choose a published ODRL policy that governs who may read, modify or delete the record. It is enforced when the deployment runs in ODRL mode; in the default open mode it is stored with the record but not consulted. See [Access policies](policies.md). A record without one inherits the policy of its parent.
     - **License** (`dct:license`): choose a published license or paste an IRI. See [Licenses](licenses.md).
 4. **Save.** By default the record is created as a **draft**. Tick **Publish immediately** next to the create button to make it publicly visible in one step.
 
@@ -25,6 +25,6 @@ From a record's detail page, its owner or an administrator can edit it in the sa
 
 ## My data
 
-The **Dashboard** ("My data") under the avatar menu lists the records you own or may edit, with their publication state, and a *Recently updated* section, so you have your working set at a glance.
+**My metadata** under the avatar menu lists the records you own or may edit, with their publication state, and a *Recently updated* section, so you have your working set at a glance.
 
 ![The steward dashboard](../assets/screenshots/07-dashboard.webp)

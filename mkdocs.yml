@@ -59,10 +59,9 @@ extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/FAIRDataTeam
-    # Add the FAIREnough channel once its URL is confirmed:
-    # - icon: fontawesome/brands/youtube
-    #   link: https://www.youtube.com/...
-    #   name: FAIREnough on YouTube
+    - icon: fontawesome/brands/youtube
+      link: https://www.youtube.com/playlist?list=PLD9zjao_DDZc
+      name: FDPneo videos on the FAIR Enough YouTube channel
 
 nav:
   - Home: index.md

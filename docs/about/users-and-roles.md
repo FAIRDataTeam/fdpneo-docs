@@ -1,6 +1,6 @@
 # Users and roles
 
-FDPneo distinguishes four functional roles. A single person can occupy several at once, and the system maps identity-provider claims onto FDPneo authorization decisions through ODRL constraints rather than through a fixed role table.
+FDPneo distinguishes four functional roles. A single person can occupy several at once, and the system maps identity-provider claims onto FDPneo authorization decisions. In the default open mode the `admin` and `steward` roles may write and everyone may read; in ODRL mode the decisions come from ODRL constraints rather than from a fixed role table.
 
 ## Functional roles
 
@@ -8,7 +8,7 @@ FDPneo distinguishes four functional roles. A single person can occupy several a
 
 **Data consumers** browse, search and query the metadata, and download or query the underlying data distributions where policy permits. Authenticated consumers may have access to records that are not publicly visible.
 
-**Data stewards** curate metadata. They create and edit records, manage their publication state, and may be scoped to specific containers: a steward responsible for one catalog need not have write access to others. The scoping is expressed through ODRL constraints on the relevant Offers.
+**Data stewards** curate metadata. They create and edit records, manage their publication state, and may be scoped to specific containers: a steward responsible for one catalog need not have write access to others. The scoping is expressed through ODRL constraints on the relevant Offers, so it requires ODRL mode.
 
 **Administrators** configure the deployment. In the application they manage SHACL schemas, resource types, ODRL policies, licenses, instance settings and users. At the deployment level they choose the triple store, configure the OIDC provider, apply deployment profiles and tune system parameters.
 
@@ -21,7 +21,7 @@ The bundled Keycloak realm defines two realm roles that the server reads from th
 | `steward` | Create, edit and delete own records, manage their publication state, use the "My data" dashboard. |
 | `admin` | Everything a steward can do, plus schemas, resource types, ODRL policies, licenses, instance settings, users and factory reset. |
 
-What a signed-in user can do with a given record is ultimately decided by the ODRL policy the record references. The system default Offer (`system-default`) grants public read and steward modify, which is the baseline until a deployment authors its own policies.
+In the default open mode, every published record is readable by everyone and the writer roles (`admin` and `steward` unless configured otherwise) may create, edit and delete. In ODRL mode, what a signed-in user can do with a given record is decided by the ODRL policy the record references, and the system default Offer (`system-default`), which grants public read and steward modify, is the baseline until a deployment authors its own. See [Access policies](../usage/policies.md#access-control-mode).
 
 ## Development users
 

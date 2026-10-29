@@ -1,6 +1,6 @@
 # Users
 
-The **Users** page lets administrators manage accounts without leaving FDPneo. It appears under the avatar menu only when the deployment has enabled the user-management façade (see [User management](../deployment/user-management.md)); both bundled stacks enable it.
+The **Users** page (avatar menu) lets administrators manage accounts without leaving FDPneo. It appears under the avatar menu only when the deployment has enabled the user-management façade (see [User management](../deployment/user-management.md)); both bundled stacks enable it.
 
 ![The users page](../assets/screenshots/12-users.webp)
 

@@ -4,7 +4,7 @@ FDPneo is an **AI-developed** FAIR Data Point: a FAIR-aligned metadata repositor
 
 ## An AI-developed implementation
 
-FDPneo is an experiment in building a complete FAIR infrastructure component with AI coding assistants. The architecture, the decision records, the server and client code, the test suites and the deployment stacks were generated with AI under human direction, with a human setting the goals, reviewing the design decisions and validating the result against the FDP specifications. This is stated openly so that adopters can weigh it: the code base is large and was produced quickly, it has been audited for security more than once, and it is still experimental.
+FDPneo is another implementation of the FDP specifications, built with AI coding assistants. The architecture, the decision records, the server and client code, the test suites and the deployment stacks were generated with AI under human direction, with a human setting the goals, reviewing the design decisions and validating the result against the FDP specifications. This is stated openly so that adopters can weigh it: the code base is large and was produced quickly, and it has been audited for security more than once.
 
 !!! warning "Not the reference implementation"
     FDPneo is separate from the [FAIR Data Point reference implementation](https://github.com/FAIRDataTeam/FAIRDataPoint). The core stack runs and can be brought up with one command, but parts of the design are still target state, and the bundled evaluation deployment is not hardened for production.
@@ -17,9 +17,9 @@ A FAIR Data Point is a metadata repository. It serves descriptions of datasets, 
 
 **Metadata management.** Records follow the DCAT hierarchy (a Catalog contains Datasets, which contain Distributions), and a deployment can define further resource types at runtime. Records are validated against the SHACL schema registered for their type. Each record moves through a publication lifecycle of draft, published and archived; only published records are visible to anonymous users.
 
-**User-defined schemas.** Administrators author and publish SHACL shapes, either as Turtle in a text-first editor or in a visual node-based editor with a live Turtle preview. Shapes are versioned at a stable IRI. Resource types and their child-link relationships are registered against published shapes, and new types appear across the application without a rebuild.
+**User-defined schemas.** Administrators author and publish SHACL shapes in a visual form-builder editor, as SHACL Turtle, or both, with a form preview and a graph view of the shape. Shapes are versioned at a stable IRI. Resource types and their child-link relationships are registered against published shapes, and new types appear across the application without a rebuild.
 
-**Access control with ODRL.** Access to records is governed by ODRL Offers in an FDP-specific profile (Permissions and Prohibitions). A record opts into a policy through `dct:rights`, and the server's policy decision point enforces it. Offers are versioned, and grants materialise Agreements that reference the Offer version in force at grant time, giving an audit trail. A guided ODRL editor in the client composes Offers within the profile.
+**Access control, open by default, ODRL on demand.** By default every published record is publicly readable and stewards and administrators may write, with no policy to author. A deployment that needs per-record access conditions switches to ODRL mode, from the configuration or at runtime in the settings. Access is then governed by ODRL Offers in an FDP-specific profile (Permissions and Prohibitions). A record opts into a policy through `dct:rights`, and the server's policy decision point enforces it. Offers are versioned, and grants materialise Agreements that reference the Offer version in force at grant time, giving an audit trail. A guided ODRL editor in the client composes Offers within the profile.
 
 **Licenses as managed documents.** Reusable license documents (for example CC BY 4.0 or CC0) are curated once and referenced from records through `dct:license`. Licenses are descriptive and are not access policy.
 
@@ -47,6 +47,7 @@ A FAIR Data Point is a metadata repository. It serves descriptions of datasets, 
 - PostgreSQL for operational state (metrics, search index, authorization cache, audit, API keys) and a pluggable triple store, reached over SPARQL 1.1 Protocol, for RDF metadata. GraphDB is the recommended default.
 - One named graph per metadata record, which reduces per-record access control to set membership over graph IRIs and lets LDP `PATCH` map directly onto SPARQL Update.
 - Full LDP, including `PATCH` for partial updates.
+- Open access by default, with ODRL enforcement as an opt-in mode (ADR-0027).
 - An ODRL profile limited to Permissions and Prohibitions, with versioned Offers and materialised Agreements.
 - Anonymous-by-design metrics, GDPR-safe by construction rather than by policy.
 
@@ -54,7 +55,7 @@ The rationale behind each choice is recorded in the [architecture decision recor
 
 ## Relationship to the reference implementation
 
-FDPneo preserves the FDP's core mission and conforms to the published specifications for metadata structure, vocabulary and content negotiation. Compared with the reference implementation it drops internal user management in favour of OIDC federated identity, separates server and client into independent repositories, replaces partial LDP support with full LDP including `PATCH`, and adds ODRL-based access control enforcement, anonymous usage metrics and a simple data provider for open distributions.
+FDPneo preserves the FDP's core mission and conforms to the published specifications for metadata structure, vocabulary and content negotiation. Compared with the reference implementation it drops internal user management in favour of OIDC federated identity, separates server and client into independent repositories, replaces partial LDP support with full LDP including `PATCH`, and adds optional ODRL-based access control enforcement, anonymous usage metrics and a simple data provider for open distributions. Both implementations support custom resource types; FDPneo additionally lets a deployment start with its own set of metadata schemas and resource types, configured at installation through a [deployment profile](architecture.md), where the reference implementation needs a data steward to change the default configuration after deployment.
 
 Some things are intentionally out of scope for the first version. There is no FDP-to-FDP federation (cross-repository query belongs to the separate FAIR Discovery aggregation product), no access-controlled data distribution, no property-level access control within a record, and no ODRL Duty enforcement.
 
