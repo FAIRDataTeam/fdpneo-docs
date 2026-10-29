@@ -72,6 +72,20 @@ After a restore or import, rebuild the search index with `fdp search reindex`. T
 
 A deployment that relies on ODRL policies and upgrades past 0.17.0 must set `FDP_ACCESS_CONTROL_MODE=odrl` (or switch *Access control* in the settings), because open access became the default. See [Access policies](../usage/policies.md#access-control-mode).
 
+### Upgrading to server 0.19 (PostgreSQL 18, Keycloak 26)
+
+Server 0.19 moves the bundled stacks to PostgreSQL 18 and Keycloak 26. Both need a one-off step on an existing deployment. After pulling the new compose files, run these two scripts from the stack directory (`deploy/stack`, or `deploy/stack/production` with `../` instead of `./`):
+
+```bash
+./upgrade-postgres-18.sh      # dump PostgreSQL 16, restore into 18
+./fix-keycloak-audience.sh    # restore the `fdp` token audience on Keycloak 26
+```
+
+- **PostgreSQL.** A major version cannot open an older data directory. Until migrated, the `postgres` container exits with "old database(s) found". The script dumps every database, FDP and Keycloak alike, and keeps a copy of the old volume named `<project>_postgres-data-pg16-backup`. It then restores into PostgreSQL 18, checks the database list and restarts the stack. Remove the backup volume and the `postgres-upgrade-*` directory once you are satisfied.
+- **Keycloak.** Keycloak 26 stopped emitting the `fdp` audience the way older realm files declared it, so every sign-in fails with "invalid bearer token". New installs import the corrected realm. An existing realm is never re-imported, so the script updates its audience mapper.
+
+Both scripts are idempotent.
+
 Pin `IMAGE_TAG` to a release tag rather than `main` for reproducible deployments.
 
 ## Health endpoints

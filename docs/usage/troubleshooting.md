@@ -2,6 +2,8 @@
 
 | Symptom | Likely cause and fix |
 |---|---|
+| **Every sign-in fails with "invalid bearer token" after an upgrade** | Keycloak 26 drops the `fdp` audience from tokens issued by an older realm. Run `fix-keycloak-audience.sh` from the stack directory ([Upgrades](../deployment/operations.md#upgrading-to-server-019-postgresql-18-keycloak-26)). |
+| **`postgres` exits with "old database(s) found" after an upgrade** | The volume still holds a PostgreSQL 16 cluster. Run `upgrade-postgres-18.sh` from the stack directory. |
 | **"Server is unreachable" on save** | A CORS or origin mismatch, or a server error returned without CORS headers. Confirm the three origins agree (client public origin, `FDP_CORS_ALLOW_ORIGINS`, Keycloak redirect URIs; see [Configuration](../deployment/configuration.md)); check the server logs and `GET /fdp-api/readyz`. |
 | **Login loops or "invalid redirect"** | The Keycloak client's redirect URIs do not include your client origin. Add it in the realm. In the evaluation stack, the client must be opened at exactly `http://localhost:5173`. |
 | **Search returns nothing or errors** | PostgreSQL is down or the index is empty. Check PostgreSQL; run `fdp search reindex`. |
