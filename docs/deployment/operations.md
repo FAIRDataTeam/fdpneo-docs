@@ -53,15 +53,39 @@ Each group has `--help`.
 
 Durable state lives in two stores that must be backed up and restored together: the triple store (the knowledge graph) and PostgreSQL (operational state, and in the production stack also Keycloak's database). In the compose stacks these are the `graphdb-data` and `postgres-data` volumes; `caddy-data` holds certificates, which can be re-obtained.
 
-For a faithful, store-independent backup of the metadata, use the backup commands (ADR-0016):
+### Moving or fully restoring a bundled stack
+
+The stack scripts produce one encrypted bundle with everything needed to recreate the same deployment on another host. The bundle holds the knowledge graph and the PostgreSQL state: settings, API keys, saved searches, index targets, the audit trail and metrics history. It also holds the Keycloak realm with its users and the deployment's `.env`.
+
+```bash
+cd deploy/stack/production
+../backup.sh                                  # asks for a passphrase twice
+# on the new host, same release checked out:
+../restore.sh fdpneo-backup-<timestamp>.fdpbk
+```
+
+- **Backup.** The server and Keycloak stop for the few minutes the dump takes, then start again.
+- **Restore.** It needs a fresh stack with no data volumes, unless `FORCE=1`. It lets you change `PUBLIC_HOST`. On a new host name, records are rebased, Keycloak's URLs follow, and metrics are re-keyed.
+- **Identity.** Keycloak's export keeps user IDs, so everyone signs in as before, and their API keys keep working.
+- **The passphrase.** The bundle contains credentials, so it is always encrypted with a passphrase of at least 12 characters. Without the passphrase, it cannot be opened.
+
+In the evaluation stack, run `./backup.sh` and `./restore.sh` from `deploy/stack`.
+
+### The `fdp backup` commands
+
+For a faithful, store-independent backup of the application itself, use the backup commands (ADR-0016, ADR-0029):
 
 | Command | What it does |
 |---|---|
 | `fdp backup dump <dir>` | Dump every named graph, with a manifest and the audit graphs, to a directory. |
-| `fdp backup restore <dir>` | Faithfully restore a dump into the triple store of the same deployment. |
-| `fdp backup import <dir>` | Import records from another deployment, adopting them under this deployment's base IRI. |
+| `fdp backup dump --full <file>` | Also include the PostgreSQL state. The result is one file, encrypted with a passphrase unless `--no-encrypt`. |
+| `fdp backup restore <dir or file>` | Faithfully restore a dump, or a full archive into an empty deployment. Stop the server first for a full archive. |
+| `fdp backup import <dir or file> --rebase` | Import records from another deployment, adopting them under this deployment's base IRI. |
+| `fdp backup verify <file>` | Check the passphrase, checksums and row counts of an archive without restoring it. |
 
-After a restore or import, rebuild the search index with `fdp search reindex`. The server's developer documentation has a dedicated chapter on [backup, restore and migration](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/dev-docs/08-backup-restore.md).
+Administrators can also create and restore backups in the web client under **Backup & Restore**. A *full deployment* backup there asks for a passphrase and pauses writes while it runs.
+
+After a restore or import, the search index is rebuilt automatically. The server's developer documentation has a dedicated chapter on [backup, restore and migration](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/dev-docs/08-backup-restore.md).
 
 ## Upgrades
 

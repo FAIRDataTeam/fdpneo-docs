@@ -33,6 +33,7 @@ The rationale for the major architectural choices is recorded as Architecture De
 | [0025](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/adr/0025-runtime-index-targets.md) | Runtime-managed FDP Index ping targets | Accepted |
 | [0026](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/adr/0026-fdp-o-namespace-correction.md) | Correct the FDP Ontology namespace and migrate stored vocabulary | Accepted |
 | [0027](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/adr/0027-open-access-default-odrl-opt-in.md) | Open access by default, ODRL evaluation opt-in | Accepted |
+| [0029](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/adr/0029-full-deployment-backup.md) | Full-deployment backup for moving and restoring an instance | Accepted |
 
 The [ADR index](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/adr/README.md) in the repository is authoritative.
 

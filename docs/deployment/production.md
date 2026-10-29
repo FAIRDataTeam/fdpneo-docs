@@ -106,7 +106,7 @@ Forwarded headers matter. Keycloak (`KC_PROXY_HEADERS=xforwarded`) and the serve
 
 **Upgrading from a server before 0.17.** Recorded metrics were keyed by the URL the container saw (`http://<host>/…`), so per-record metrics never matched the `https://` record IRIs. Re-key the history once with `docker compose exec server fdp metrics rebase-resources --from http://<PUBLIC_HOST> --dry-run`, then again without `--dry-run`.
 
-**Backups.** State lives in the `postgres-data` volume (operational state and Keycloak) and the `graphdb-data` volume (the knowledge graph); they must be backed up and restored together. `caddy-data` holds certificates, which are re-obtainable, but backing it up avoids ACME rate limits on rebuilds. See [Operations](operations.md) for the `fdp backup` commands.
+**Backups.** State lives in the `postgres-data` volume (operational state and Keycloak) and the `graphdb-data` volume (the knowledge graph); they must be backed up and restored together. `caddy-data` holds certificates, which are re-obtainable, but backing it up avoids ACME rate limits on rebuilds. To move the deployment to another host, or to keep a complete copy, use `../backup.sh` and `../restore.sh`; see [Operations](operations.md#moving-or-fully-restoring-a-bundled-stack).
 
 **No public DNS yet?** Add `tls internal` inside the site block of the `Caddyfile` to smoke-test with a self-signed certificate. Browsers will warn and the server's issuer fetch will fail certificate verification, so login stays broken until real TLS is in place; this mode only checks routing.
 
