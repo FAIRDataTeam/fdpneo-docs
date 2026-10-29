@@ -16,10 +16,12 @@ This stack is for evaluation, demos and local use. It runs over plain HTTP on `l
 git clone https://github.com/FAIRDataTeam/fdpneo-server.git
 cd fdpneo-server
 cp deploy/stack/.env.example deploy/stack/.env
+# use the released images, built for Intel, AMD and Apple Silicon
+sed -i.bak 's/^IMAGE_TAG=main/IMAGE_TAG=latest/' deploy/stack/.env
 docker compose -f deploy/stack/compose.yaml --env-file deploy/stack/.env up -d
 ```
 
-The defaults in `.env` are right for a single machine. First boot pulls the images and takes a few minutes while Keycloak imports its realm, the init container creates the `fdp` repository in GraphDB, the server runs its migrations and the default profile is applied. Watch progress with:
+The example file pulls `main`, the development build, which is published for `linux/amd64` only. Release tags (`latest`, `X.Y` and `X.Y.Z`) are multi-architecture and signed, so `latest` works on every machine. The other defaults in `.env` are right for a single machine. First boot pulls the images and takes a few minutes while Keycloak imports its realm, the init container creates the `fdp` repository in GraphDB, the server runs its migrations and the default profile is applied. Watch progress with:
 
 ```bash
 docker compose -f deploy/stack/compose.yaml --env-file deploy/stack/.env ps
@@ -51,7 +53,8 @@ The evaluation stack's `.env` sets the public host and ports, the image tag, the
 | `SERVER_PORT` | `8000` | Published API port. |
 | `KEYCLOAK_PORT` | `8081` | Published Keycloak port. |
 | `MCP_PORT` | `8002` | Published port of the optional MCP bridge. |
-| `IMAGE_TAG` | `main` | Image tag pulled from GHCR. Releases publish `X.Y.Z`, `X.Y` and `latest`. `SERVER_IMAGE_TAG` and `CLIENT_IMAGE_TAG` override it per component. |
+| `IMAGE_TAG` | `main` | Image tag pulled from GHCR. `main` follows development and is amd64-only; releases publish `X.Y.Z`, `X.Y` and `latest`, built for amd64 and arm64. |
+| `SERVER_IMAGE_TAG`, `CLIENT_IMAGE_TAG` | unset | Pin server and client to their own releases; each falls back to `IMAGE_TAG`. |
 | `ENVIRONMENT` | `production` | Server runtime mode (`production` or `development`). |
 | `EXPOSE_API_DOCS` | `true` | Serve Swagger and ReDoc even in production mode. The OpenAPI spec is always served. |
 | `POSTGRES_*`, `KEYCLOAK_ADMIN*`, `FDP_IDP_ADMIN_*` | dev values | Credentials; rotate for anything beyond evaluation. |
@@ -80,10 +83,21 @@ docker compose -f deploy/stack/compose.yaml --env-file deploy/stack/.env up -d -
 The server build context is the server repository root; the client context is the sibling `../client`.
 
 !!! note "Apple Silicon and other arm64 hosts"
-    Release images from server 0.21.1 and client 0.9.2 onwards are published for both `linux/amd64` and `linux/arm64`. Pin them with `SERVER_IMAGE_TAG` and `CLIENT_IMAGE_TAG`, or use `IMAGE_TAG=latest`. The `main` development images and older releases are `linux/amd64` only, so on an arm64 host a pull of those fails with "no matching manifest". Build them from source instead, as above.
+    Release images (server 0.21.1 and client 0.9.2 onwards) are built for `linux/amd64` and `linux/arm64`. The `main` and commit tags are development builds for `linux/amd64` only, so pulling `main` on an arm64 host fails with "no matching manifest". Use `IMAGE_TAG=latest` or a release tag, or build from source as above.
 
 !!! note "GeoIP database month when building the server"
-    The server image downloads the DB-IP city database at build time, and the month pinned in the `Dockerfile` ages out after a while (the download then fails with a 404). Pass the current month explicitly, for example `docker build --build-arg DBIP_CITY_VERSION=2026-10 -t ghcr.io/fairdatateam/fdpneo-server:main .` from the server repository, then start the stack without `--build`. The CI workflow and `scripts/fetch-geoip.sh` resolve the newest month automatically.
+    The server image downloads the DB-IP city database at build time, and the month pinned in the `Dockerfile` ages out after a while (the download then fails with a 404). Since server 0.19 the fallback month is 2026-10. When it ages out, pass the current month explicitly, for example `docker build --build-arg DBIP_CITY_VERSION=2026-10 -t ghcr.io/fairdatateam/fdpneo-server:main .` from the server repository, then start the stack without `--build`. The CI workflow and `scripts/fetch-geoip.sh` resolve the newest month automatically.
+
+## Upgrading a stack from before server 0.19
+
+Server 0.19 moved the stack to PostgreSQL 18 and Keycloak 26. After pulling, run two one-off, idempotent scripts from `deploy/stack`:
+
+```bash
+./upgrade-postgres-18.sh      # dump PostgreSQL 16, restore into 18, keep a backup volume
+./fix-keycloak-audience.sh    # restore the `fdp` token audience on Keycloak 26
+```
+
+Without the first, the `postgres` container exits with "old database(s) found". Without the second, every sign-in fails with "invalid bearer token". The first script leaves a `postgres-upgrade-<timestamp>` directory with the dump. Delete it once you are satisfied, and never commit it.
 
 ## Running on another host on your network
 
@@ -108,6 +122,8 @@ Access control starts in **open** mode: every published record is publicly reada
 
 ## Stop, update, reset
 
+Keycloak keeps its data in the `keycloak-data` volume (since server 0.20), so users created at runtime survive a recreated container. Administrators are told in the client when a newer release exists; see [Updates](updates.md). To back the stack up or move it to another machine, see [Backup and restore](backup-and-restore.md#moving-a-bundled-stack).
+
 ```bash
 # stop, keep data
 docker compose -f deploy/stack/compose.yaml --env-file deploy/stack/.env down
@@ -116,7 +132,7 @@ docker compose -f deploy/stack/compose.yaml --env-file deploy/stack/.env down
 docker compose -f deploy/stack/compose.yaml --env-file deploy/stack/.env pull
 docker compose -f deploy/stack/compose.yaml --env-file deploy/stack/.env up -d
 
-# stop and wipe all data (GraphDB, PostgreSQL, Keycloak)
+# stop and wipe all data (GraphDB, PostgreSQL, Keycloak users)
 docker compose -f deploy/stack/compose.yaml --env-file deploy/stack/.env down -v
 ```
 

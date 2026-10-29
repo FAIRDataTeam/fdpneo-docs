@@ -108,7 +108,8 @@ curl -H 'Accept: application/sparql-results+json' \
 | Users (when enabled) | `/fdp-api/users` |
 | Metrics | `/fdp-api/metrics/summary`, `/timeseries/daily`, `/top-resources`, `/geography` |
 | Data | `GET /fdp-api/data/{distribution_id}` serves or redirects to an open distribution; `/sparql` under it queries a SPARQL data service |
-| Administration | `POST /fdp-api/admin/reset`, `/fdp-api/admin/backup/dump`, `/restore`, `/jobs/{id}` |
+| Administration | `POST /fdp-api/admin/reset`, `/fdp-api/admin/backup/dump` (`?scope=full` with a passphrase for an encrypted full backup), `/restore`, `/jobs/{id}` |
+| Updates | `GET /fdp-api/admin/updates`, `POST /fdp-api/admin/updates/check`, `/fdp-api/admin/updates/requests` (admin), `/fdp-api/admin/updates/agent/*` (updater token only) |
 | Profiles | `GET /fdp-api/profiles`, `/{id}`, `/{id}/{version}` |
 
 The OpenAPI specification is the authoritative list; the client's TypeScript types are generated from it.

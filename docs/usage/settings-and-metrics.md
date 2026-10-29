@@ -10,7 +10,7 @@ Settings are per-key configuration values the server exposes: branding texts, se
 
 **Access control** chooses between *Open access*, the default, where everyone can read every published record and only the writer roles may create, edit or delete, and *ODRL policies*, where each record's access policy decides. The writer roles are edited here too. *Reset to default* returns to the value set by `FDP_ACCESS_CONTROL_MODE`. See [Access policies](policies.md#access-control-mode).
 
-**Update check** switches the daily check for new FDPneo releases on or off. The **Updates** panel below the settings shows the running and latest server and client versions, when the server last checked, and the releases this deployment is behind. Security releases and releases that need manual upgrade steps are flagged. *Check now* refreshes the information, at most once a minute. When a newer release exists, administrators also see a notice under the header; dismissing it lasts until the page is reloaded.
+**Updates** shows the running and latest server and web-client versions, the last check and a *Check now* button. With the optional host updater connected, it also offers *Update to X* and lists recent update requests. **Update check** switches the daily release check off. See [Updates](../deployment/updates.md).
 
 Look and feel (colours, logo, favicon, organisation name) is configured on the client container instead, authored with the **Appearance** editor at `/appearance`; see [Configuration](../deployment/configuration.md).
 
@@ -28,7 +28,11 @@ Open **avatar, Access tokens** as any signed-in user.
 
 ![The access-tokens page](../assets/screenshots/16-tokens.webp)
 
-Create a personal access token to call the API from scripts and tools, and revoke it at any time. Copy the token when it is created: the server stores only a hash of it. See [API usage](../api/index.md).
+Create a personal access token to call the API from scripts and tools, and revoke it at any time. Copy the token when it is created: the server stores only a hash of it. See [API usage](../api/index.md). Administrators can also mint an *Updater token*, which carries only the updater role and works only for the optional host updater.
+
+## Backup and restore
+
+Open **avatar, Backup & Restore** as an administrator to back up the records or the whole deployment, and to restore an archive. See [Backup and restore](../deployment/backup-and-restore.md).
 
 ## Factory reset
 

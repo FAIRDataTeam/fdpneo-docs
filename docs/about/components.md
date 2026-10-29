@@ -5,7 +5,7 @@ An FDPneo deployment is five processes, plus an optional sixth for agent access.
 | Component | Technology | Default port (evaluation stack) | Role |
 |---|---|---|---|
 | **Client** (`fdpneo-client`) | Vue 3, TypeScript, Vite, served by nginx | `5173` | The browser user interface. Talks to the API and to the identity provider directly. |
-| **Server** (`fdpneo-server`) | Python 3.12+ (image: 3.15), FastAPI, uvicorn | `8000` | REST/LDP API and SPARQL endpoint. Validates bearer tokens and enforces access control, open by default or ODRL policies when enabled. |
+| **Server** (`fdpneo-server`) | Python 3.12+, FastAPI, uvicorn | `8000` | REST/LDP API and SPARQL endpoint. Validates bearer tokens and enforces access control, open by default or ODRL policies when enabled. |
 | **Triple store** | Ontotext GraphDB 10.8 (default) | internal | Holds all RDF: metadata records, schemas, policies, licenses, resource definitions. |
 | **PostgreSQL** | PostgreSQL 18 | internal | Operational state: metrics, search index, authorization cache, audit log, saved queries, API-key hashes, job state. |
 | **Keycloak** | Keycloak 26 | `8081` | OIDC identity provider. FDPneo has no internal user database. |

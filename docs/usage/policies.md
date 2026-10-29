@@ -18,7 +18,7 @@ The deployment default comes from `FDP_ACCESS_CONTROL_MODE` (`open` or `odrl`, s
 While the deployment is in open mode, the Policies page shows a notice that policies are stored but not enforced. You can still author and publish policies and attach them to records, so they are in place when you switch to ODRL mode.
 
 !!! warning "Upgrading a deployment that relies on policies"
-    Open mode became the default in the server release after 0.17.0. A deployment that relies on ODRL policies must set `FDP_ACCESS_CONTROL_MODE=odrl`, or switch the setting, when it upgrades. Otherwise every published record becomes publicly readable.
+    Open mode became the default in server 0.18.0. A deployment that relies on ODRL policies must set `FDP_ACCESS_CONTROL_MODE=odrl`, or switch the setting, when it upgrades. Otherwise every published record becomes publicly readable.
 
 ## Managing policies
 

@@ -21,12 +21,22 @@ Copy `.env.example` from the server repository and adjust. Settings are grouped 
 | `FDP_DATA_` | Simple data provider | `DOWNLOAD_MODE` (`redirect` or `stream`), proxy timeout and size limit |
 | `FDP_PROFILE_` | Deployment profile | `AUTO_APPLY`, `PATH` |
 | `FDP_ACCESS_CONTROL_` | Access control | `MODE` (`open`, the default, or `odrl`) |
-| `FDP_UPDATES_` | Update notifications | `CHECK_ENABLED` (default `true`), `CHECK_INTERVAL_HOURS`, `SERVER_REPO`, `CLIENT_REPO` |
+| `FDP_UPDATES_` | Update notices | `CHECK_ENABLED` (`true` by default; `false` makes no request at all), `SERVER_REPO`, `CLIENT_REPO` (for forks) |
 | `FDP_INDEX_PING_` | FDP Index announcement | `TARGETS`, `INTERVAL_SECONDS` |
 | `FDP_REMOTE_LABELS_` | External label resolution | `ENABLED`, `ALLOWED_HOSTS` |
 | `FDP_RATELIMIT_` | Rate limiting behind a proxy | `TRUST_FORWARDED_FOR` |
 
 After editing the configuration, restart the server. After upgrading, also run `fdp db migrate` (the container entrypoint does this automatically).
+
+### Compose stacks: images
+
+| Variable | Meaning |
+|---|---|
+| `IMAGE_TAG` | Image tag for server and client. `main` is the amd64-only development build; releases publish `X.Y.Z`, `X.Y` and `latest`, multi-architecture and signed. |
+| `SERVER_IMAGE_TAG`, `CLIENT_IMAGE_TAG` | Per-component tags, falling back to `IMAGE_TAG`. Server and client versions differ, so pin each to its own release. |
+| `SERVER_IMAGE`, `CLIENT_IMAGE` | Image repositories, for example a mirror. |
+
+The optional host updater has its own variables (`FDPNEO_ROOT`, `FDP_UPDATER_KEY`, `UPDATER_*`); see [Updates](updates.md#the-optional-host-updater).
 
 ### Access control
 
@@ -38,19 +48,6 @@ After editing the configuration, restart the server. After upgrading, also run `
 | `odrl` | Each record's ODRL policy, inherited from its parent or the system default, decides who may read or write it. |
 
 The variable only seeds the default of the runtime setting `access.control`. An administrator can switch modes and change the writer roles at any time under **avatar, Settings, Access control**, and that choice wins until it is reset. Both bundled compose files pass `FDP_ACCESS_CONTROL_MODE` through with `open` as the default. See [Access policies](../usage/policies.md#access-control-mode).
-
-### Update notifications
-
-Once a day the server asks the GitHub Releases API whether a newer FDPneo server or web client exists. Administrators then see a notice in the client and the details under **Instance settings, Updates** (ADR-0028). A notice flags security releases and releases that need manual upgrade steps.
-
-The check sends nothing about the deployment. GitHub sees the server's IP address and a `fdpneo-server/<version>` User-Agent.
-
-| Switch | Effect |
-|---|---|
-| `FDP_UPDATES_CHECK_ENABLED=false` | The server never contacts GitHub, and the runtime setting cannot turn the check back on. Use it for air-gapped or policy-restricted sites. |
-| The `updates.check` setting | An administrator switches the check off or on without a restart. |
-
-Forks can point `FDP_UPDATES_SERVER_REPO` and `FDP_UPDATES_CLIENT_REPO` at their own GitHub repositories.
 
 ### Triple store
 

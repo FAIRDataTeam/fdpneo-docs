@@ -53,7 +53,7 @@ FDPneo consists of three independently released components:
 
 ## Versions covered
 
-This documentation was written against **server 0.17.0**, **client 0.6.6** and **fdp-mcp 0.3.1** (September 2026). Statements that depend on a specific version say so.
+This documentation was written against **server 0.21.1**, **client 0.9.2** and **fdp-mcp 0.3.1** (October 2026). Statements that depend on a specific version say so.
 
 ## See also
 

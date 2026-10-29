@@ -77,6 +77,8 @@ nav:
       - Configuration: deployment/configuration.md
       - User management: deployment/user-management.md
       - Operations: deployment/operations.md
+      - Backup and restore: deployment/backup-and-restore.md
+      - Updates: deployment/updates.md
   - Usage:
       - Signing in and roles: usage/signing-in.md
       - Browsing, search and SPARQL: usage/browsing-and-search.md

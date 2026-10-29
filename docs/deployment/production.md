@@ -34,8 +34,8 @@ Every `CHANGE-ME` is required; the stack refuses to start without them. A conven
 |---|---|
 | `PUBLIC_HOST` | The public DNS name, without scheme or port. Caddy obtains the certificate for it. |
 | `ACME_EMAIL` | Contact for certificate issuance and expiry notices. |
-| `IMAGE_TAG` | Image tag to pull, `latest` by default. Releases publish `X.Y.Z`, `X.Y` and `latest`; `main` follows unreleased development. |
-| `SERVER_IMAGE_TAG`, `CLIENT_IMAGE_TAG` | Pin the server and the client to their own releases, for example `0.20.0` and `0.9.0`. Each falls back to `IMAGE_TAG`. |
+| `IMAGE_TAG` | Image tag to pull, `latest` by default. Releases publish `X.Y.Z`, `X.Y` and `latest` for amd64 and arm64. |
+| `SERVER_IMAGE_TAG`, `CLIENT_IMAGE_TAG` | Pin server and client to their own releases (recommended, and what the optional updater manages). Each falls back to `IMAGE_TAG`. |
 | `EXPOSE_API_DOCS` | Serve Swagger and ReDoc (`false` by default; the OpenAPI spec is always served). |
 | `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` | The server's operational database. |
 | `KC_DB_PASSWORD` | Keycloak's own database role, created on first boot. |
@@ -100,28 +100,17 @@ Forwarded headers matter. Keycloak (`KC_PROXY_HEADERS=xforwarded`) and the serve
 
 ## Operations
 
-**Updates.** Administrators are told about new releases in the client (see [Configuration](configuration.md#update-notifications)). To update, set `SERVER_IMAGE_TAG` and `CLIENT_IMAGE_TAG` to the new releases, then run `docker compose pull && docker compose up -d`. A pinned tag also makes a rollback a one-line change. Read the release's upgrade notes first when it is marked as needing manual steps.
+**Updates.** Administrators see a notice in the client when a newer release exists. Apply it by hand (pin the new versions in `.env`, then `docker compose pull && docker compose up -d`) or let the optional host updater do it. See [Updates](updates.md).
 
 **Metrics roll-ups** run in-process (`FDP_METRICS_ROLLUP_IN_PROCESS=true`): raw request rows are aggregated to hourly and daily rows and pruned on a fixed interval, which is also the privacy boundary of ADR-0002, since raw rows carry the pseudonymous visitor hash. If you run more than one server replica, unset it and schedule `docker compose exec server fdp metrics rollup` (every five minutes or so) instead, so replicas do not race.
 
 **Upgrading from a server before 0.17.** Recorded metrics were keyed by the URL the container saw (`http://<host>/…`), so per-record metrics never matched the `https://` record IRIs. Re-key the history once with `docker compose exec server fdp metrics rebase-resources --from http://<PUBLIC_HOST> --dry-run`, then again without `--dry-run`.
 
-**Backups.** State lives in the `postgres-data` volume (operational state and Keycloak) and the `graphdb-data` volume (the knowledge graph); they must be backed up and restored together. `caddy-data` holds certificates, which are re-obtainable, but backing it up avoids ACME rate limits on rebuilds. To move the deployment to another host, or to keep a complete copy, use `../backup.sh` and `../restore.sh`; see [Operations](operations.md#moving-or-fully-restoring-a-bundled-stack).
+**Backups and moving to another host.** `../backup.sh` writes one encrypted bundle with the knowledge graph, the PostgreSQL state, the Keycloak realm with its users, and `.env`. `../restore.sh` recreates the deployment on a new host, under a new host name if needed. Point DNS at the new host before Caddy requests certificates. See [Backup and restore](backup-and-restore.md).
+
+**Upgrading from a server before 0.19.** PostgreSQL 18 and Keycloak 26 need two one-off scripts, run in this directory after pulling the new compose files: `../upgrade-postgres-18.sh`, then `../fix-keycloak-audience.sh`. Check that you can sign in, then remove the `fdpneo-prod_postgres-data-pg16-backup` volume and the `postgres-upgrade-*` dump directory.
 
 **No public DNS yet?** Add `tls internal` inside the site block of the `Caddyfile` to smoke-test with a self-signed certificate. Browsers will warn and the server's issuer fetch will fail certificate verification, so login stays broken until real TLS is in place; this mode only checks routing.
-
-## Verifying images
-
-Release images from server 0.21.1 and client 0.9.2 onwards are signed with Sigstore keyless signing. The signature proves that an image was built by FDPneo's own release workflow for that exact tag. Each image also carries a build-provenance attestation, recording how and from which commit it was built. To check an image before deploying it:
-
-```bash
-cosign verify ghcr.io/fairdatateam/fdpneo-server:0.21.1 \
-  --certificate-identity https://github.com/FAIRDataTeam/fdpneo-server/.github/workflows/release.yml@refs/tags/v0.21.1 \
-  --certificate-oidc-issuer https://token.actions.githubusercontent.com
-gh attestation verify oci://ghcr.io/fairdatateam/fdpneo-server:0.21.1 --repo FAIRDataTeam/fdpneo-server
-```
-
-For the client, use `fdpneo-client`, its version and its repository. The optional host updater runs the same signature check before it applies a release. The `main` development images are not signed.
 
 ## Hardening checklist
 
