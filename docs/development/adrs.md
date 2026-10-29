@@ -21,7 +21,7 @@ The rationale for the major architectural choices is recorded as Architecture De
 | [0013](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/adr/0013-user-management-facade.md) | User-management façade over the IdP Admin API | Accepted |
 | [0014](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/adr/0014-persistent-identifiers.md) | Persistent identifiers: base/serving split, dual model, W3ID | Accepted |
 | [0015](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/adr/0015-form-grouping-presentation-overlay.md) | Cross-schema form grouping via a presentation overlay | Proposed |
-| [0016](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/adr/0016-backup-restore-migration.md) | Faithful backup/restore and instance migration | Proposed |
+| [0016](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/adr/0016-backup-restore-migration.md) | Faithful backup/restore and instance migration | Accepted |
 | [0017](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/adr/0017-alternative-identifiers-and-signposting.md) | Structured alternative identifiers and FAIR Signposting | Proposed |
 | [0018](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/adr/0018-agent-consumption-mcp-server.md) | Agent consumption via a standalone MCP sidecar (`fdp-mcp`) | Accepted |
 | [0019](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/adr/0019-record-schema-binding-and-versioning.md) | Self-describing record–schema binding and schema versioning | Accepted |
@@ -33,7 +33,9 @@ The rationale for the major architectural choices is recorded as Architecture De
 | [0025](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/adr/0025-runtime-index-targets.md) | Runtime-managed FDP Index ping targets | Accepted |
 | [0026](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/adr/0026-fdp-o-namespace-correction.md) | Correct the FDP Ontology namespace and migrate stored vocabulary | Accepted |
 | [0027](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/adr/0027-open-access-default-odrl-opt-in.md) | Open access by default, ODRL evaluation opt-in | Accepted |
+| [0028](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/adr/0028-release-tags-and-update-notifications.md) | Version-tagged releases and update notifications | Accepted |
 | [0029](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/adr/0029-full-deployment-backup.md) | Full-deployment backup for moving and restoring an instance | Accepted |
+| [0030](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/adr/0030-optional-host-updater.md) | Optional, pull-based host updater | Accepted |
 
 The [ADR index](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/docs/adr/README.md) in the repository is authoritative.
 
