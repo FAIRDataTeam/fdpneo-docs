@@ -19,7 +19,7 @@ Open **avatar, Backup & Restore** as an administrator.
 
 **Create a backup.** Choose *Records only* or *Full deployment*. A full backup asks for the passphrase twice. The backup runs as a background job on the server, and *Download archive* appears when it is ready. While a full backup or restore runs, writes are paused and answered with `503` and a `Retry-After` header. Reads continue.
 
-**Restore from a backup.** Upload an archive and choose what happens to records that already exist: *Merge* skips them, *Overwrite* replaces them. *Preview (dry run)* reports what would change without writing anything. An encrypted archive asks for its passphrase. A full restore also brings back settings and API keys, and the server must run the same version as when the backup was taken. Uploads are limited to 10 MiB. Restore larger archives with the command line.
+**Restore from a backup.** Upload an archive and choose what happens to records that already exist: *Merge* skips them, *Overwrite* replaces them. *Preview (dry run)* reports what would change without writing anything. An encrypted archive asks for its passphrase. A full restore also brings back settings and API keys. It needs a deployment whose database holds no state yet, such as a fresh installation, and the server must run the same version as when the backup was taken. A records-only archive can be restored into a running deployment. Uploads are limited to 10 MiB. Restore larger archives with the command line.
 
 Adopting records from another deployment under this deployment's identifier base (import with rebase) is intentionally a command-line action.
 
