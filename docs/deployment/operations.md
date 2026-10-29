@@ -72,6 +72,20 @@ After a restore or import, rebuild the search index with `fdp search reindex`. T
 
 A deployment that relies on ODRL policies and upgrades past 0.17.0 must set `FDP_ACCESS_CONTROL_MODE=odrl` (or switch *Access control* in the settings), because open access became the default. See [Access policies](../usage/policies.md#access-control-mode).
 
+### Updating from the web client (optional)
+
+A bundled stack can run an optional **host updater agent** (server ADR-0030). Administrators can then apply a new server or client release from **Instance settings, Updates** with a confirmation step. The agent works through these steps:
+
+1. It checks the release on GitHub itself.
+2. It pins the exact image it pulled.
+3. It takes a full backup.
+4. It recreates only the updated service and waits for the new version.
+5. It rolls back if the new version does not come up and no database migration ran.
+
+It refuses releases that need manual steps, such as the PostgreSQL 18 move below. It never changes the compose files or the database, identity provider, triple store or proxy.
+
+The agent is off by default because it controls Docker. On a standard Docker host that is equivalent to root access. With rootless Docker or Podman it is limited to that user's containers. It is not meant for Kubernetes. Enabling it takes an *Updater token*, minted under **API keys** by an administrator, a backup command, and the `updater` compose profile. See the [updater README](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/deploy/updater/README.md).
+
 ### Upgrading to server 0.19 (PostgreSQL 18, Keycloak 26)
 
 Server 0.19 moves the bundled stacks to PostgreSQL 18 and Keycloak 26. Both need a one-off step on an existing deployment. After pulling the new compose files, run these two scripts from the stack directory (`deploy/stack`, or `deploy/stack/production` with `../` instead of `./`):
