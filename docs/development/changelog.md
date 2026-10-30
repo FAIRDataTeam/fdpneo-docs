@@ -4,11 +4,13 @@ Each repository keeps its own changelog in the [Keep a Changelog](https://keepac
 
 | Component | Current version | Changelog |
 |---|---|---|
-| Server | 0.21.1 (2026-10-29) | [`fdpneo-server/CHANGELOG.md`](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/CHANGELOG.md) |
-| Client | 0.9.2 (2026-10-29) | [`fdpneo-client/CHANGELOG.md`](https://github.com/FAIRDataTeam/fdpneo-client/blob/main/CHANGELOG.md) |
+| Server | 0.21.2 (2026-10-30) | [`fdpneo-server/CHANGELOG.md`](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/CHANGELOG.md) |
+| Client | 0.9.3 (2026-10-30) | [`fdpneo-client/CHANGELOG.md`](https://github.com/FAIRDataTeam/fdpneo-client/blob/main/CHANGELOG.md) |
 | MCP bridge | 0.3.1 (2026-09-02) | [`mcp/CHANGELOG.md`](https://github.com/FAIRDataTeam/mcp/blob/main/CHANGELOG.md) |
 
 ## Server 0.18 to 0.21
+
+**0.21.2.** Saved searches keep their search text. The server stores a saved search as a search request and used to drop keys it did not know without an error, so searches saved from client 0.9.2 and earlier came back empty. Unknown keys are now rejected. Upgrade the client to 0.9.3 at the same time, and save any affected searches again. A database dump from a local evaluation stack, committed by mistake in 0.21.0, was removed, and the server repository's history after 0.20.0 was rewritten. Existing clones need `git fetch --force --tags` and a hard reset of `main`.
 
 **0.21.1.** The first signed, multi-architecture release images (`linux/amd64` and `linux/arm64`). Apple Silicon and ARM servers no longer need to build locally. The host updater verifies release signatures before it changes anything. See [Updates](../deployment/updates.md).
 
@@ -19,6 +21,8 @@ Each repository keeps its own changelog in the [Keep a Changelog](https://keepac
 **0.18.0.** Open access by default, ODRL enforcement opt-in (ADR-0027, see [Access policies](../usage/policies.md#access-control-mode)). **Upgrading:** a deployment that relies on ODRL policies must set `FDP_ACCESS_CONTROL_MODE=odrl`. Also a dependency refresh that clears all known advisories.
 
 ## Client 0.7 to 0.9
+
+**0.9.3.** Fixes two bugs. "+ New user" crashed the Users page, because an unescaped `@` in the email placeholder broke message compilation. Saved searches were stored without their search text. A test now compiles every message in every locale.
 
 **0.9.2.** Signed, multi-architecture images. **0.9.0** (needs server 0.20) adds the update banner, the *Updates* panel in Instance settings, *Update to X* through the host updater, and updater tokens. **0.8.0** upgrades major dependencies and pins DOMPurify past a critical advisory. **0.7.0** adds the access-control form in Instance settings and the open-mode notice on the Policies page, and fixes the policy and license editors against server 0.16 and later.
 

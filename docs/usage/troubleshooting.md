@@ -2,6 +2,8 @@
 
 | Symptom | Likely cause and fix |
 |---|---|
+| **A saved search opens as an empty search** (its `query` is `null` in `GET /fdp-api/me/saved-queries`) | It was saved by client 0.9.2 or earlier, which stored searches in a format the server dropped. Upgrade to client 0.9.3 and server 0.21.2, delete the search and save it again. The original search text was never stored. |
+| **"+ New user" shows "Something went wrong" with message `10`** | Client 0.9.2 failed to compile the form's email placeholder. Upgrade to client 0.9.3. |
 | **"Server is unreachable" on save** | A CORS or origin mismatch, or a server error returned without CORS headers. Confirm the three origins agree (client public origin, `FDP_CORS_ALLOW_ORIGINS`, Keycloak redirect URIs; see [Configuration](../deployment/configuration.md)); check the server logs and `GET /fdp-api/readyz`. |
 | **Login loops or "invalid redirect"** | The Keycloak client's redirect URIs do not include your client origin. Add it in the realm. In the evaluation stack, the client must be opened at exactly `http://localhost:5173`. |
 | **Search returns nothing or errors** | PostgreSQL is down or the index is empty. Check PostgreSQL; run `fdp search reindex`. |
