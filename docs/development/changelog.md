@@ -4,11 +4,13 @@ Each repository keeps its own changelog in the [Keep a Changelog](https://keepac
 
 | Component | Current version | Changelog |
 |---|---|---|
-| Server | 0.21.2 (2026-10-30) | [`fdpneo-server/CHANGELOG.md`](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/CHANGELOG.md) |
+| Server | 0.21.3 (2026-11-16) | [`fdpneo-server/CHANGELOG.md`](https://github.com/FAIRDataTeam/fdpneo-server/blob/main/CHANGELOG.md) |
 | Client | 0.9.3 (2026-10-30) | [`fdpneo-client/CHANGELOG.md`](https://github.com/FAIRDataTeam/fdpneo-client/blob/main/CHANGELOG.md) |
 | MCP bridge | 0.3.1 (2026-09-02) | [`mcp/CHANGELOG.md`](https://github.com/FAIRDataTeam/mcp/blob/main/CHANGELOG.md) |
 
 ## Server 0.18 to 0.21
+
+**0.21.3.** Security patch: dnspython 2.9.2 and OpenTelemetry 1.45.2 clear two new advisories. No code changes and no upgrade steps; the host updater can apply it.
 
 **0.21.2.** Saved searches keep their search text. The server stores a saved search as a search request and used to drop keys it did not know without an error, so searches saved from client 0.9.2 and earlier came back empty. Unknown keys are now rejected. Upgrade the client to 0.9.3 at the same time, and save any affected searches again. A database dump from a local evaluation stack, committed by mistake in 0.21.0, was removed, and the server repository's history after 0.20.0 was rewritten. Existing clones need `git fetch --force --tags` and a hard reset of `main`.
 
@@ -41,5 +43,7 @@ Earlier 0.16 releases corrected the FDP Ontology namespace to `https://w3id.org/
 An expired session now ends instead of looping: a failed silent token renewal clears the session, idempotent reads are replayed once without the token so public content still loads, writes are never re-sent, and the header shows a "Session expired, sign in again" prompt. The metrics dashboard shows `4xx` and `5xx` responses as separate indicators.
 
 ## MCP bridge 0.3.1
+
+Unreleased on `main`: dependency floors raised for new advisories (`mcp>=1.30,<2`, PyJWT 2.15). The `main` image includes them.
 
 Dual-accept of the FDP-O namespace: the bridge reads publication state and state-transition affordances in both the legacy and the corrected namespace, so it works against servers before and after 0.16.
